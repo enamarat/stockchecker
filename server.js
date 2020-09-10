@@ -4,6 +4,11 @@ var express     = require('express');
 var bodyParser  = require('body-parser');
 var expect      = require('chai').expect;
 var cors        = require('cors');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
+dotenv.config();
+const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 
 var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -15,8 +20,29 @@ app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only
 
+/***/
+app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({ 
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://code.jquery.com"],
+      styleSrc: ["'self'"]
+    }
+  })
+);
+/***/
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Connect to a database
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true }); 
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function() {
+  console.log("Connection Successful!");
+});
 
 //Index page (static HTML)
 app.route('/')

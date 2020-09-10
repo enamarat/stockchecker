@@ -7,7 +7,9 @@
 */
 
 var chai = require('chai');
-var StockHandler = require('../controllers/stockHandler.js');
+var assert = chai.assert;
+
+var StockHandler = require('../controllers/stockHandler.js').StockHandler;
 
 var stockPrices = new StockHandler();
 
