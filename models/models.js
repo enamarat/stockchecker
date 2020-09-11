@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const stockSchema = new Schema({
-  symbol: {type: String},
+  stock: {type: String},
   likes: {type: Number},
   visitors: []
 });
